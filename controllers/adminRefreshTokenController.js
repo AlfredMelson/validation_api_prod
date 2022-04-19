@@ -14,7 +14,7 @@ const adminDB = {
         this.admins = data;
     }
 };
-const handleAdminRefreshToken = async (req, res) => {
+const handleAdminRefreshToken = (req, res) => {
     const cookies = req.cookies;
     console.log(`cookie available at refresh: ${JSON.stringify(cookies)}`);
     if (!cookies?.jwt)
@@ -30,10 +30,13 @@ const handleAdminRefreshToken = async (req, res) => {
             const hackedAdminRefreshTokenArray = [];
             if (adminHacked) {
                 const hackedAdmin = {
-                    ...adminHacked,
+                    id: adminHacked.id,
+                    username: adminHacked.username,
+                    password: adminHacked.password,
+                    email: adminHacked.email,
                     refreshToken: hackedAdminRefreshTokenArray
                 };
-                const otherAdmin = adminDB.admins.filter(admin => admin.email !== adminHacked.email);
+                const otherAdmin = adminDB.admins.filter(admin => admin.id !== adminHacked.id);
                 if (adminDB.admins.length <= 1) {
                     adminDB.setAdmins(hackedAdmin);
                 }
@@ -41,6 +44,7 @@ const handleAdminRefreshToken = async (req, res) => {
                     const allAdmin = [...otherAdmin, hackedAdmin];
                     adminDB.setAdmins(allAdmin);
                 }
+                await promises_1.default.writeFile(path_1.default.join(__dirname, '..', 'model', 'administrators.json'), JSON.stringify(adminDB.admins));
             }
         });
         return res.sendStatus(403);
@@ -50,7 +54,10 @@ const handleAdminRefreshToken = async (req, res) => {
     jsonwebtoken_1.default.verify(refreshToken, 'a97a6109f424c526929b5ea4d2a9d17bf36ff15f5f7a610df6f0cad5fdaa58d670a184287054620245017ce1ff5f22c79ee21ef016e6b586e62e6ace5aa73040', async (error, decoded) => {
         if (error) {
             const updatedfoundAdmin = {
-                ...foundAdmin,
+                id: foundAdmin.id,
+                username: foundAdmin.username,
+                password: foundAdmin.password,
+                email: foundAdmin.email,
                 refreshToken: [...newRefreshTokenArray]
             };
             const otherAdmin = adminDB.admins.filter(admin => admin.id !== foundAdmin.id);
@@ -61,23 +68,27 @@ const handleAdminRefreshToken = async (req, res) => {
                 const allAdmin = [...otherAdmin, updatedfoundAdmin];
                 adminDB.setAdmins(allAdmin);
             }
+            await promises_1.default.writeFile(path_1.default.join(__dirname, '..', 'model', 'administrators.json'), JSON.stringify(adminDB.admins));
         }
         if (error || foundAdmin.username !== decoded.username)
             return res.sendStatus(403);
         const accessToken = (0, tokenManager_1.createJwtAccessToken)(decoded.username);
         const newRefreshToken = (0, tokenManager_1.createJwtRefreshToken)(foundAdmin.username);
         const loggedInAdmin = {
-            ...foundAdmin,
+            id: foundAdmin.id,
+            username: foundAdmin.username,
+            password: foundAdmin.password,
+            email: foundAdmin.email,
             refreshToken: [...newRefreshTokenArray, newRefreshToken]
         };
         const otherAdmin = adminDB.admins.filter(admin => admin.username !== foundAdmin.username);
-        if (adminDB.admins.length <= 1) {
-            adminDB.setAdmins(loggedInAdmin);
+        if (Object.keys(adminDB.admins).length <= 1) {
+            adminDB.setAdmins([loggedInAdmin]);
         }
         else {
-            const allAdmin = [...otherAdmin, loggedInAdmin];
-            adminDB.setAdmins(allAdmin);
+            adminDB.setAdmins([...otherAdmin, loggedInAdmin]);
         }
+        await promises_1.default.writeFile(path_1.default.join(__dirname, '..', 'model', 'administrators.json'), JSON.stringify(adminDB.admins));
         res.cookie('jwt', newRefreshToken, {
             httpOnly: true,
             sameSite: 'none',
@@ -85,7 +96,6 @@ const handleAdminRefreshToken = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000
         });
         res.json(accessToken);
-        await promises_1.default.writeFile(path_1.default.join(__dirname, '..', 'model', 'administrators.json'), JSON.stringify(adminDB.admins));
     });
 };
 exports.default = handleAdminRefreshToken;

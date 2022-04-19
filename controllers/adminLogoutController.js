@@ -15,7 +15,7 @@ const adminDB = {
 const handleAdminLogout = async (req, res) => {
     const cookies = req?.cookies;
     console.log(`cookie available at login: ${JSON.stringify(cookies)}`);
-    if (!cookies?.jwt)
+    if (!cookies.jwt)
         return res.sendStatus(204);
     const refreshToken = cookies.jwt;
     const foundAdmin = adminDB.admins.find(admin => admin.refreshToken === refreshToken);
@@ -23,10 +23,12 @@ const handleAdminLogout = async (req, res) => {
         res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
         return res.sendStatus(204);
     }
+    const newRefreshTokenArray = foundAdmin.refreshToken.filter(admin => admin !== refreshToken);
     const loggedOutAdmin = {
         ...foundAdmin,
-        refreshToken: []
+        refreshToken: newRefreshTokenArray
     };
+    console.log('loggedOutAdmin', loggedOutAdmin);
     const otherAdmin = adminDB.admins.filter(admin => admin.id !== foundAdmin.id);
     if (adminDB.admins.length <= 1) {
         adminDB.setAdmins(loggedOutAdmin);
@@ -36,6 +38,7 @@ const handleAdminLogout = async (req, res) => {
         adminDB.setAdmins(allAdmin);
     }
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
+    res.json(foundAdmin);
     res.sendStatus(204);
     await promises_1.default.writeFile(path_1.default.join(__dirname, '..', 'model', 'administrators.json'), JSON.stringify(adminDB.admins));
 };

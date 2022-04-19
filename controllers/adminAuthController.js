@@ -26,10 +26,10 @@ const handleAdminAuthentication = async (req, res) => {
         const newRefreshToken = (0, tokenManager_1.createJwtRefreshToken)(foundAdmin.username);
         let newRefreshTokenArray = !cookies?.jwt
             ? foundAdmin.refreshToken
-            : foundAdmin.refreshToken.filter(token => token !== cookies.jwt);
+            : foundAdmin.refreshToken.filter((token) => token !== cookies.jwt);
         if (cookies?.jwt) {
             const refreshToken = cookies.jwt;
-            const foundToken = foundAdmin.refreshToken.find(admin => admin.includes(refreshToken));
+            const foundToken = foundAdmin.refreshToken.find((admin) => admin.includes(refreshToken));
             if (!foundToken) {
                 newRefreshTokenArray = [];
             }

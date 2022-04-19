@@ -1,5 +1,0 @@
-20220417	06:41:04	01e129eb-951e-4804-90dc-267db58abc03	GET	undefined	/
-20220417	06:41:40	4227287c-46e2-4de4-9f0f-80ced696b3a3	OPTIONS	http://localhost:3000	/admin/auth
-20220417	06:41:40	440f0c87-818c-4628-a03a-ffec4689228f	POST	http://localhost:3000	/admin/auth
-20220417	06:41:42	1b26ee9e-2612-48c0-a9c0-7a7493607163	GET	http://localhost:3000	/api/ids
-20220417	06:41:42	7ef21066-d7ba-4540-911c-bc78705941c8	GET	http://localhost:3000	/api/ids

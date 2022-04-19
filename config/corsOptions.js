@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const approvedOrigins_1 = __importDefault(require("./approvedOrigins"));
 const corsOptions = {
-    origin: (origin, callback) => {
-        if (origin !== undefined) {
-            if (approvedOrigins_1.default.indexOf(origin) !== -1 || !origin) {
+    origin: (requestOrigin, callback) => {
+        if (requestOrigin !== undefined) {
+            if (approvedOrigins_1.default.indexOf(requestOrigin) !== -1 || !requestOrigin) {
                 callback(null, true);
             }
             else {
