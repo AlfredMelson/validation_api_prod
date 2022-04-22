@@ -35,6 +35,7 @@ router.get('/all', async (req, res) => {
         const body = {
             employees: allEmployees
         };
+        console.log('body: ', body);
         res.json(body);
     }
     catch (error) {

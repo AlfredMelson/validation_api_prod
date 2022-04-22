@@ -17,7 +17,7 @@ const adminDB = {
 const handleAdminAuthentication = async (req, res) => {
     const cookies = req?.cookies;
     const { adminUsername, adminPassword } = req.body;
-    const foundAdmin = adminDB.admins.find(admin => admin.username === adminUsername);
+    const foundAdmin = adminDB.admins.find((admin) => admin.username === adminUsername);
     if (!foundAdmin)
         return res.sendStatus(401);
     const match = await bcrypt_1.default.compare(adminPassword, foundAdmin.password);
@@ -42,7 +42,7 @@ const handleAdminAuthentication = async (req, res) => {
         };
         const otherAdmin = adminDB.admins.filter(admin => admin.email !== foundAdmin.email);
         if (adminDB.admins.length <= 1) {
-            adminDB.setAdmins(authenticatedAdmin);
+            adminDB.setAdmins([authenticatedAdmin]);
         }
         else {
             const allAdmin = [...otherAdmin, authenticatedAdmin];
