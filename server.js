@@ -15,7 +15,6 @@ const path_1 = __importDefault(require("path"));
 const logEvents_1 = require("./middleware/logEvents");
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const http_1 = __importDefault(require("http"));
 const config_1 = require("./config/config");
 const app = (0, express_1.default)();
 app.use(logEvents_1.logger);
@@ -52,6 +51,7 @@ app.all('*', (req, res) => {
     }
 });
 app.use(errorHandler_1.default);
-http_1.default
-    .createServer(app)
-    .listen(config_1.config.server.port, () => console.log(`Server is running on port ${config_1.config.server.port}`));
+const server = app.listen(config_1.config.server.port, () => {
+    console.log('Express server has been started on port ', config_1.config.server.port);
+});
+exports.default = server;
