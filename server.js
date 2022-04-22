@@ -13,7 +13,7 @@ const logEvents_1 = require("./middleware/logEvents");
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const body_parser_1 = __importDefault(require("body-parser"));
 require('dotenv').config();
-const PORT = process.env.PORT || 9003;
+const port = process.env.port || 9003;
 const app = (0, express_1.default)();
 app.use(logEvents_1.logger);
 app.use(body_parser_1.default.json());
@@ -47,7 +47,7 @@ app.all('*', (req, res) => {
     }
 });
 app.use(errorHandler_1.default);
-const server = app.listen(PORT, () => {
-    console.log('Express server has been started on port ', PORT);
+const server = app.listen(port, () => {
+    console.log('Express server has been started on port ', port);
 });
 exports.default = server;
