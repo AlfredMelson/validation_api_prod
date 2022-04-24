@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const PORT = process.env.PORT || 9003;
+const port = process.env.PORT || 9003;
 exports.config = {
     server: {
-        port: PORT
+        port: port
     }
 };

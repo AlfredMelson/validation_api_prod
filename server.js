@@ -51,6 +51,7 @@ app.all('*', (req, res) => {
     }
 });
 app.use(errorHandler_1.default);
+app.get('/', (_req, res) => res.send('validation api testing 1.2.3.'));
 const server = app.listen(config_1.config.server.port, () => {
     console.log('Express server has been started on port ', config_1.config.server.port);
 });
